@@ -1,16 +1,19 @@
-import ECommerce from "@/components/Dashboard/E-commerce";
-import { Metadata } from "next";
+import type { Metadata } from 'next';
+import HomePage, { Joke } from './HomePage';
+
+const title = 'Home | nextjs-starter';
 
 export const metadata: Metadata = {
-  title: "TailAdmin | Next.js E-commerce Dashboard Template",
-  description: "This is Home Blog page for TailAdmin Next.js",
-  // other metadata
+  title: title,
 };
 
-export default function Home() {
-  return (
-    <>
-      <ECommerce />
-    </>
-  );
+async function getJokes(): Promise<Joke[]> {
+  const res = await fetch('https://official-joke-api.appspot.com/jokes/ten');
+  const jokes: Joke[] = await res.json();
+  return jokes;
+}
+
+export default async function Home() {
+  const jokes = await getJokes();
+  return <HomePage jokes={jokes} />;
 }
