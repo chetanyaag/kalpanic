@@ -11,7 +11,7 @@ services:
 
 before_install:
 - cd frontend
-- docker image build -t ${IMGNAME} .
+- docker image build -t ${IMGNAME} . 
 
 script:
 #TravisCI seems to be coming in on undocumented IP addresses.
