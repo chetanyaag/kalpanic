@@ -6,10 +6,25 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend/:/usr/src/app/
+    # volumes:
+    #   - ./frontend/:/usr/src/app/
     environment:
       - NODE_ENV=development
+ 
+  restapi:
+    build:
+      context: restapi/.
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    # volumes:
+    #   - ./restapi/:/app/
+
+
+
+
+
+
 
 # dckr_pat_Cqdo2RuoFobEnQuAOs4RUMx9vYM
 #dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
