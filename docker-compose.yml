@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  frontend:
+    build:
+      context: frontend/.
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    # volumes:
+    #   - .:/usr/src/app/
+    environment:
+      - NODE_ENV=development
+
+# dckr_pat_Cqdo2RuoFobEnQuAOs4RUMx9vYM
