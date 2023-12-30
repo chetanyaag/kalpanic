@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: chetanyaag/ui:one
+        image: chetanyaag/ui:two
         ports:
         - containerPort: 3000
 ---
