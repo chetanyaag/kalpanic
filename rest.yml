@@ -18,23 +18,17 @@ spec:
         command: ["gunicorn", "--bind", "0.0.0.0:8000", "tutorial.wsgi"]
         ports:
         - containerPort: 8000
-        volumeMounts:
-            - mountPath: /app/
-              name: restapi-volume
-      volumes:
-        - name: restapi-volume
-          hostPath:
-            path: /home/chetanyaagrawal/kalpanic/api
+
 ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: restapi-service
-# spec:
-#   selector:
-#     app: restapi
-#   ports:
-#     - protocol: TCP
-#       port: 8000
-#       targetPort: 8000
-#   type: LoadBalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: restapi-service
+spec:
+  selector:
+    app: restapi
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: LoadBalancer

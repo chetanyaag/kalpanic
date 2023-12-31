@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: celery
+spec:
+  selector:
+    app: celery
+  ports:
+    - protocol: TCP
+      port: 80  # Change this to the desired port for Celery
+      targetPort: 80  # Change this to the desired port for Celery
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery
+  template:
+    metadata:
+      labels:
+        app: celery
+    spec:
+      containers:
+        - name: celery
+          image: chetanyaag/restapi:three   # Update with the actual image and tag
+          command: ["celery", "--app=tutorial", "worker", "-l", "INFO"]
+
