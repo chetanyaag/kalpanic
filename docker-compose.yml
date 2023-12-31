@@ -1,13 +1,17 @@
 version: '3.7'
 services:
+
+  redis:
+    image: redis:7.0.11-alpine
+
   frontend:
     build:
       context: frontend/.
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    # volumes:
-    #   - ./frontend/:/usr/src/app/
+    volumes:
+      - ./frontend/:/usr/src/app/
     environment:
       - NODE_ENV=development
  
@@ -15,10 +19,26 @@ services:
     build:
       context: restapi/.
       dockerfile: Dockerfile
+    command: "gunicorn --bind 0.0.0.0:8000 tutorial.wsgi"
     ports:
       - "8000:8000"
-    # volumes:
-    #   - ./restapi/:/app/
+    volumes:
+      - ./restapi/:/app/
+    depends_on:
+      - redis
+
+
+  celery:
+    container_name: celery
+    build:
+      context: restapi/.
+      dockerfile: Dockerfile
+    command: celery --app=tutorial worker -l INFO
+    volumes:
+      - ./restapi/:/app/
+    depends_on:
+      - redis
+
 
 
 
