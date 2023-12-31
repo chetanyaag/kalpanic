@@ -14,9 +14,17 @@ spec:
     spec:
       containers:
       - name: restapi
-        image: chetanyaag/restapi:three  # Replace with the actual image name and tag
+        image: chetanyaag/restapi:three  
+        command: ["gunicorn", "--bind", "0.0.0.0:8000", "tutorial.wsgi"]
         ports:
         - containerPort: 8000
+        volumeMounts:
+            - mountPath: /app/
+              name: restapi-volume
+      volumes:
+        - name: restapi-volume
+          hostPath:
+            path: ./restapi
 ---
 apiVersion: v1
 kind: Service
