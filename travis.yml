@@ -17,7 +17,7 @@ before_install:
 script:
 #TravisCI seems to be coming in on undocumented IP addresses.
 
-#  - dig +short myip.opendns.com @resolver1.opendns.com
+ - dig +short myip.opendns.com @resolver1.opendns.com
  - echo "here i am here"
 
 after_success:
