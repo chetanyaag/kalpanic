@@ -24,7 +24,7 @@ spec:
       volumes:
         - name: restapi-volume
           hostPath:
-            path: /home/chetanyaagrawal/kalpanic/restapi
+            path: /home/chetanyaagrawal/kalpanic/api
 ---
 # apiVersion: v1
 # kind: Service
