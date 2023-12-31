@@ -11,7 +11,7 @@ services:
 
 before_install:
 - cd frontend
-- docker image build -t ${IMGNAME} . 
+- docker image build -t $IMGNAME . 
 
 script:
 #TravisCI seems to be coming in on undocumented IP addresses.
@@ -20,9 +20,9 @@ script:
  - echo "here i am here"
 
 after_success:
-- echo ${USERNAME} ${DHUB_PASS}
-- docker login -u ${USERNAME} -p ${DHUB_PASS}
-- docker push ${IMGNAME}
+- echo $IMGNAME
+- docker login -u chetanyaag -p dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
+- docker push $IMGNAME
 # - echo "${SSH_KEY}" |  base64 --decode > /tmp/ssh_rsa
 # - chmod 600 /tmp/ssh_rsa
 # - ssh -o "StrictHostKeyChecking no" pi@${IPADDR} -i /tmp/ssh_rsa "echo test > test.log"

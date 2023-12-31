@@ -48,3 +48,5 @@ services:
 
 # dckr_pat_Cqdo2RuoFobEnQuAOs4RUMx9vYM
 #dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
+
+# docker login -u chetanyaag -p dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
