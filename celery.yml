@@ -26,6 +26,6 @@ spec:
     spec:
       containers:
         - name: celery
-          image: chetanyaag/restapi:three   # Update with the actual image and tag
+          image: chetanyaag/restapi:f  # Update with the actual image and tag
           command: ["celery", "--app=tutorial", "worker", "-l", "INFO"]
 
