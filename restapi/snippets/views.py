@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from snippets.models import Snippet
 from snippets.permissions import IsOwnerOrReadOnly
 from snippets.serializers import SnippetSerializer, UserSerializer
-from tutorial.celery import add_numbers
+# from tutorial.celery import add_numbers
+from snippets.tasks import createAvideo
 
 class SnippetViewSet(viewsets.ModelViewSet):
     """
@@ -39,5 +40,5 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 def my_view(request):
-    add_numbers.delay()
+    createAvideo.delay()
     return HttpResponse("Hello, Django!")
