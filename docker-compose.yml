@@ -4,22 +4,23 @@ services:
   redis:
     image: redis:7.0.11-alpine
 
-  frontend:
-    build:
-      context: frontend/.
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend/:/usr/src/app/
-    environment:
-      - NODE_ENV=development
+  # frontend:
+  #   build:
+  #     context: frontend/.
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./frontend/:/usr/src/app/
+  #   environment:
+  #     - NODE_ENV=development
  
   restapi:
     build:
       context: restapi/.
       dockerfile: Dockerfile
-    command: "gunicorn --bind 0.0.0.0:8000 tutorial.wsgi"
+    command: "python manage.py runserver 0.0.0.0:8000"
+    # command: "gunicorn --bind 0.0.0.0:8000 tutorial.wsgi"
     ports:
       - "8000:8000"
     volumes:

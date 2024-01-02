@@ -1,24 +1,56 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from snippets.models import Snippet
+from snippets.models import SearchTerm, Video
+from snippets.script.youtube import YoutubeClass
+from pytube import YouTube as YT
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = "__all__"
 
 
-class SnippetSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    highlight = serializers.HyperlinkedIdentityField(
-        view_name='snippet-highlight', format='html')
+class SearchTermSerializer(serializers.ModelSerializer):
+    videos = VideoSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Snippet
-        fields = ('url', 'id', 'highlight', 'owner', 'title', 'code',
-                  'linenos', 'language', 'style')
+        model = SearchTerm
+        fields = "__all__"
 
+    def create(self, validated_data):
+        term = validated_data["term"]
+        status = validated_data.get("status", "pending")
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    snippets = serializers.HyperlinkedRelatedField(
-        many=True, view_name='snippet-detail', read_only=True)
+        # Check if the SearchTerm with the given term already exists
+        existing_search_term = SearchTerm.objects.filter(term=term).first()
 
-    class Meta:
-        model = User
-        fields = ('url', 'id', 'username', 'snippets')
+        if existing_search_term:
+            # Update the existing SearchTerm if it already exists
+            existing_search_term.status = status
+            existing_search_term.save()
+            return existing_search_term
+        else:
+            # Create a new SearchTerm if it doesn't exist
+            search_term = SearchTerm(term=term, status=status)
+            search_term.save()
+            youtube_instance = YoutubeClass()
+            video_list = youtube_instance.get_video_items(search_term.term)
+            for video_instance in video_list:
+                video_url = (
+                    r"https://www.youtube.com/shorts/" + video_instance["id"]["videoId"]
+                )
+                yt_video = YT(video_url)
+                if yt_video.length > 90:
+                    continue
+                # video_duration = d if d:=video_instance["contentDetails"]["duration"] else ""
+                video = Video(
+                    search_term_id=search_term.id,
+                    title=video_instance["snippet"]["title"],
+                    url=video_url,
+                    status="pending",
+                    duration="",
+                )
+                video.save()
+            
+            return search_term
