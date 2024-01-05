@@ -1,14 +1,15 @@
+'use client'
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { useState, useEffect } from "react";
 import { parseCookies ,setCookie } from 'nookies';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 export default function Home1({
     children,
   }: {
     children: React.ReactNode;
   }){
-  // const router = useRouter()
+  const router = useRouter()
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function Home1({
 
       const { authToken } = parseCookies();
       if (!authToken) {
-        console.log("hi")
+        router.push('/auth/signin')
       }
     };
     checkAuth()

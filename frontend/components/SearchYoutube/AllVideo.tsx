@@ -1,21 +1,18 @@
 'use client';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from "next/image";
-import { Product } from "@/types/product";
-import { SearchTerm } from '@/types/searchTerm';
-import { Video } from '@/types/video';
-// import Loader from "@/components/common/Loader";
+
 import Link from 'next/link';
 
-export default function SearchTermForm() {
+export default function AllVideo() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const apiUrl = process.env.API_URL || 'http://localhost:8000';
 
   const [searchTerm, setSearchTerm] = useState("")
-
   const externaImageLoader = ({ src }: { src: string }) => src;
+
 
   const [videos, setVideos] = useState([{
     id: 1,
@@ -28,73 +25,31 @@ export default function SearchTermForm() {
     status: "pending",
     search_term: 1
   }])
-  const on_change_searchterm = (event: any) => {
-    setSearchTerm(event.target.value)
-  }
 
-  const handle_on_click = async (event: any) => {
-    event.preventDefault();
-    if (searchTerm !== "") {
-      setLoading(true)
-      const formData = {
-        "term": searchTerm,
-        "status": "pending"
-      }
-      try {
-        const response = await axios.post(`${apiUrl}/searchterms/`, formData);
-        console.log('Response:', response.data);
-        setVideos(response.data["videos"])
-        setLoading(false)
-      } catch (error) {
-        console.error('Error:', error);
-      }
+
+
+  useEffect(() => {
+
+    const checkAuth = () => {
+    axios.get(`${apiUrl}/videos/`)
+    .then(response => {
+      console.log(response.data)
+      setVideos(response.data)
+    })
+    .catch(error => {
+
+      console.error('Error:', error);
+    });
+
     }
-
-  }
+    checkAuth();
+}, []);
+ 
 
   return (<>
 
-    <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
-
-      <div className="flex flex-col gap-9">
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Search YouTube Shorts
-            </h3>
-          </div>
-          <form action="#">
-            <div className="p-6.5">
-              <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
-                  Search Term
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter a single search term"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                  value={searchTerm}
-                  onChange={on_change_searchterm}
-                />
-              </div>
-              {loading ? (
-                <div className="flex h items-center justify-center bg-white">
-                  <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
-                </div>
-              ) : (
-                <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray" onClick={handle_on_click}>
-                  Please Search
-                </button>)}
-            </div>
-          </form>
-        </div>
-      </div>
 
 
-
-    </div>
-
-    <br />
 
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">

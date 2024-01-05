@@ -48,12 +48,15 @@ class SearchTermSerializer(serializers.ModelSerializer):
                 if yt_video.length > 90:
                     continue
                 # video_duration = d if d:=video_instance["contentDetails"]["duration"] else ""
+                image_link = video_instance["snippet"]["thumbnails"]["default"]["url"]
+
                 video = Video(
                     search_term_id=search_term.id,
                     title=video_instance["snippet"]["title"],
                     url=video_url,
                     status="pending",
                     duration=str(yt_video.length),
+                    image=image_link
                 )
                 video.save()
             

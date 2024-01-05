@@ -35,6 +35,7 @@ class Video(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=SearchTerm.STATUS_CHOICES)
+    image = models.CharField(max_length=2048, null=True, default="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0Xn0QdJbIsUFnXi5EfoovLlk4pqnfPAWpsFMDx4YP0rvhfT0DoOw5wbf6gWUY-V6-9cE&usqp=CAU")
 
 
 class GenrateVideo(models.Model):
