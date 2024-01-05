@@ -1,0 +1,32 @@
+arch:
+  - arm64
+
+env:
+  - IMGNAME_FRONTEND=chetanyaag/ui
+  - IMGNAME_BACKEND=chetanyaag/rest-api
+  - USERNAME=chetanyaag
+  - DHUB_PASS=dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
+
+services:
+  - docker
+
+before_install:
+- docker image build -t "${IMGNAME_FRONTEND}:${TRAVIS_COMMIT}" frontend/.
+- docker image build -t "${IMGNAME_BACKEND}:${TRAVIS_COMMIT}" restapi/.
+
+script:
+#TravisCI seems to be coming in on undocumented IP addresses.
+
+ - dig +short myip.opendns.com @resolver1.opendns.com
+ - echo "here i am here"
+
+after_success:
+# - echo $IMGNAME
+- docker login -u chetanyaag -p dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
+- docker push "${IMGNAME_FRONTEND}:${TRAVIS_COMMIT}"
+- docker push "${IMGNAME_BACKEND}:${TRAVIS_COMMIT}" restapi/.
+
+# - echo "${SSH_KEY}" |  base64 --decode > /tmp/ssh_rsa
+# - chmod 600 /tmp/ssh_rsa
+# - ssh -o "StrictHostKeyChecking no" pi@${IPADDR} -i /tmp/ssh_rsa "echo test > test.log"
+# - ssh -o "StrictHostKeyChecking no" pi@${IPADDR} -i /tmp/ssh_rsa "cd ${INSTALL_LOCATION} && git pull ${TRAVIS_BUILD_WEB_URL} && docker image build -t ${IMGNAME} ${INSTALL_LOCATION}/. && docker push ${IMGNAME} && docker stop discordbot; docker rm discordbot; docker run --name discordbot --restart always -d -e TOKEN=${TOKEN} ${IMGNAME}"
