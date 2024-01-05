@@ -3,17 +3,20 @@ services:
 
   redis:
     image: redis:7.0.11-alpine
-
-  # frontend:
-  #   build:
-  #     context: frontend/.
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./frontend/:/usr/src/app/
-  #   environment:
-  #     - NODE_ENV=development
+ 
+  frontend:
+    build:
+      context: frontend/.
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/:/usr/src/app/
+    depends_on:
+      - restapi
+    environment:
+      - NODE_ENV=development
+      - API_URL=http://restapi:8000 
  
   restapi:
     build:

@@ -1,9 +1,13 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from snippets.models import SearchTerm, Video
+from snippets.models import SearchTerm, Video, GenrateVideo
 from snippets.script.youtube import YoutubeClass
 from pytube import YouTube as YT
+
+
+
+
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,8 +53,13 @@ class SearchTermSerializer(serializers.ModelSerializer):
                     title=video_instance["snippet"]["title"],
                     url=video_url,
                     status="pending",
-                    duration="",
+                    duration=str(yt_video.length),
                 )
                 video.save()
             
             return search_term
+
+class GenrateVideoSearializer(serializers.ModelSerializer):
+    class Meta:
+        model = GenrateVideo
+        fields = "__all__"

@@ -35,3 +35,9 @@ class Video(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=SearchTerm.STATUS_CHOICES)
+
+
+class GenrateVideo(models.Model):
+    genrated_video_url = models.URLField(null=True, default="")
+    image_link = models.CharField(max_length=2088)
+    source_video_link = models.URLField()

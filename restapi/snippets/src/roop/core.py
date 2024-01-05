@@ -87,10 +87,10 @@ def parse_args() -> None:
     # roop.globals.max_memory = args.max_memory
     # roop.globals.execution_providers = decode_execution_providers(args.execution_provider)
     # roop.globals.execution_threads = args.execution_threads
-    roop.globals.source_path = "/app/s.png"
-    roop.globals.target_path = "/app/vid.mp4"
+    roop.globals.source_path = "/app/download_temp/images/image.jpg"
+    roop.globals.target_path = "/app/download_temp/videos/file_name.mp4"
     roop.globals.output_path = normalize_output_path(
-        roop.globals.source_path, roop.globals.target_path, "/app/fac.mp4"
+        roop.globals.source_path, roop.globals.target_path, "/app/download_temp/videos/genrated.mp4"
     )
     roop.globals.headless = (
         roop.globals.source_path is not None
