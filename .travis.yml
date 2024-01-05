@@ -12,8 +12,8 @@ services:
   - docker
 
 before_install:
-- docker image build -t "${IMGNAME_FRONTEND}:${TRAVIS_COMMIT}" frontend/.
 - docker image build -t "${IMGNAME_BACKEND}:${TRAVIS_COMMIT}" restapi/.
+- docker image build -t "${IMGNAME_FRONTEND}:${TRAVIS_COMMIT}" frontend/.
 
 script:
  - dig +short myip.opendns.com @resolver1.opendns.com

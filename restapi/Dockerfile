@@ -10,8 +10,11 @@ WORKDIR /app
 
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
-RUN rm /etc/apt/sources.list.d/cuda*.list
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+
+RUN apt-get update 
+RUN apt-get install ffmpeg 
+RUN apt-get install  libsm6 
+RUN apt-get install libxext6  -y
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 COPY ./entrypoint.sh /app/entrypoint.sh
