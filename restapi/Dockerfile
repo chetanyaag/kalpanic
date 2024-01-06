@@ -11,7 +11,7 @@ WORKDIR /app
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
 # RUN apt-get install -y apt-transport-https
-apt-get clean
+RUN apt-get clean
 RUN apt-get update -y
 RUN apt-get install ffmpeg -y
 RUN apt-get install  libsm6 -y
