@@ -23,7 +23,11 @@ jobs:
       run: |
         docker image build -t $image_name_frontend$GITHUB_SHA frontend/.
         docker image build -t $image_name_backend$GITHUB_SHA restapi/.
-        docker image build -t 
+
         docker login -u chetanyaag -p $docker_pass
         docker push $image_name_frontend
         docker push $image_name_backend
+
+    - name: Create kubernatefile and deoploy
+      run: |
+        python3 build.py $GITHUB_SHA
