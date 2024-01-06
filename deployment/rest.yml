@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: restapi
-        image: chetanyaag/restapi:f 
+        image: chetanyaag/restapi:fir 
         command: ["gunicorn", "--bind", "0.0.0.0:8000", "tutorial.wsgi"]
         ports:
         - containerPort: 8000
