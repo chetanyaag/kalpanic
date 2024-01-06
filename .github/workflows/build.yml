@@ -18,8 +18,8 @@ jobs:
       with:
         # project_id: ${{ secrets.GOOGLE_PROJECT }}
         # service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        image_name: chetanyaag/ui
-        tag: new
+        image_name: ${{ secrets.IMAGE_NAME_FRONTEND }}
+        # tag: new
         
 
         export_default_credentials: true
@@ -28,9 +28,9 @@ jobs:
       # env:
       #   GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
       run: |
-        docker image build -t $image_name:$tag frontend/.
+        docker image build -t $image_name frontend/.
         docker login -u chetanyaag -p dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
-        docker push $image_name:$tag
+        docker push $image_name
 
 
 
