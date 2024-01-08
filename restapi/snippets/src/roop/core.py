@@ -90,7 +90,9 @@ def parse_args() -> None:
     roop.globals.source_path = "/app/download_temp/images/image.jpg"
     roop.globals.target_path = "/app/download_temp/videos/file_name.mp4"
     roop.globals.output_path = normalize_output_path(
-        roop.globals.source_path, roop.globals.target_path, "/app/download_temp/videos/genrated.mp4"
+        roop.globals.source_path,
+        roop.globals.target_path,
+        "/app/download_temp/videos/genrated.mp4",
     )
     roop.globals.headless = (
         roop.globals.source_path is not None

@@ -4,9 +4,13 @@ import { useEffect, useState } from 'react';
 import Image from "next/image";
 
 import Link from 'next/link';
+import Danger from '../Alert/Danger';
 
 export default function AllVideo() {
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [showmessage, setShowmessage] = useState(false)
+  const [alert, setAlert] = useState('')
 
   const apiUrl = process.env.API_URL || 'http://localhost:8000';
 
@@ -26,30 +30,63 @@ export default function AllVideo() {
     search_term: 1
   }])
 
+  const on_change_searchterm = (event: any) => {
+    setSearchTerm(event.target.value)
+  }
+
+
+  const handleOnClickAdd = async (event: any, index: number) => {
+    event.preventDefault();
+    console.log(index)
+    const updatedVideos = [...videos]
+    const video_to_update = updatedVideos[index];
+    if (index >= 0 && index < videos.length) {
+      updatedVideos.splice(index, 1)
+      setVideos(updatedVideos);
+    } else {
+      console.error('Invalid index to remove');
+      setShowmessage(true)
+      setAlert('Invalid index to remove')
+    }
+
+    // TODO: simple post api update the status of video
+    // try {
+    //   const response = await axios.post(`${apiUrl}/searchterms/`,);
+    //   console.log('Response:', response.data);
+    // video_to_update['id']
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // setShowmessage(true)
+    // setAlert(`${error}`)
+    // }
+
+  }
+
+
 
 
   useEffect(() => {
 
     const checkAuth = () => {
-    axios.get(`${apiUrl}/videos/`)
-    .then(response => {
-      console.log(response.data)
-      setVideos(response.data)
-    })
-    .catch(error => {
+      axios.get(`${apiUrl}/videos/`)
+        .then(response => {
+          console.log(response.data)
+          setVideos(response.data)
+        })
+        .catch(error => {
 
-      console.error('Error:', error);
-    });
+          console.error('Error:', error);
+        });
 
     }
     checkAuth();
-}, []);
- 
+  }, []);
+
 
   return (<>
 
 
-
+    {showmessage ? (<Danger message={alert} />) : (<></>)}
 
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
@@ -72,7 +109,7 @@ export default function AllVideo() {
           <p className="font-medium">Views</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="font-medium">SearchTerm</p>
+          <p className="font-medium">Action</p>
         </div>
       </div>
 
@@ -116,7 +153,14 @@ export default function AllVideo() {
             <p className="text-sm text-black dark:text-white">{product.duration} </p>
           </div>
           <div className="col-span-1 flex items-center">
-            <p className="text-sm text-meta-3">{searchTerm}</p>
+          <Link
+              href="#"
+              className="inline-flex items-center justify-center rounded-md border border-meta-3 py-3 px-8 text-center font-medium text-meta-3 hover:bg-opacity-90 lg:px-8 xl:px-10"
+            
+              onClick={(e)=>handleOnClickAdd(e, key)}
+            >
+              ADD
+            </Link>
           </div>
         </div>
       ))}

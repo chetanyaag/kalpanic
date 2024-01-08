@@ -1,18 +1,84 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import axios from 'axios';
+import { parseCookies ,setCookie } from 'nookies';
+import { useRouter } from 'next/navigation'
+
+
+
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Signin Page | Next.js E-commerce Dashboard Template",
-  description: "This is Signin page for TailAdmin Next.js",
-  // other metadata
-};
+import Danger from "@/components/Alert/Danger";
+// export const metadata: Metadata = {
+//   title: "Signin Page | Next.js E-commerce Dashboard Template",
+//   description: "This is Signin page for TailAdmin Next.js",
+//   // other metadata
+// };
 
 const SignIn: React.FC = () => {
+
+
+  const router = useRouter()
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [showmessage, setShowmessage] = useState(false)
+  const [alert, setAlert] = useState('')
+  const apiUrl = process.env.API_URL || 'http://localhost:8000';
+
+
+
+
+  const handleOnChangeName = (event:any) =>{
+    setUsername(event.target.value)
+  }
+  const handleOnChangePassword = (event:any) =>{
+    setPassword(event.target.value)
+
+  }
+  const handleSubmit = async (event:any) =>{
+
+        event.preventDefault();
+
+
+        const formData = {
+          "username": username,
+          "password": password
+        }
+        try {
+          const response = await axios.post(`${apiUrl}/api/token/`, formData);
+          console.log('Response:', response.data);
+
+          setCookie(null, 'accessToken', response.data['access'], {
+            maxAge: 30 * 24 * 60 * 60, // 30 days
+            path: '/',
+          });
+          setCookie(null, 'authToken', response.data['refresh'], {
+            maxAge: 30 * 24 * 60 * 60, // 30 days
+            path: '/',
+          });
+
+          window.location.href = "/allvideo"
+
+
+
+        } catch (error) {
+          console.error('Error:', error);
+          setShowmessage(true)
+          setAlert(`${error}`)
+        }
+  } 
+
+
+
+
   return (
     <>
-      <Breadcrumb pageName="Sign In" />
+      {/* <Breadcrumb pageName="Sign In" /> */}
+      {showmessage? (<Danger message={alert} />) :(<></>)}
+      
 
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
@@ -169,20 +235,22 @@ const SignIn: React.FC = () => {
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Start for free</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Sign In to TailAdmin
+                Sign In to Kalpanic
               </h2>
 
               <form>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Email
+                    Username
                   </label>
                   <div className="relative">
                     <input
-                      type="email"
+                      type="text"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
+                      value={username}
+                      onChange={handleOnChangeName}
+                   />
 
                     <span className="absolute right-4 top-4">
                       <svg
@@ -213,7 +281,9 @@ const SignIn: React.FC = () => {
                       type="password"
                       placeholder="6+ Characters, 1 Capital letter"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
+                      value={password}
+                      onChange={handleOnChangePassword}
+                  />
 
                     <span className="absolute right-4 top-4">
                       <svg
@@ -244,10 +314,11 @@ const SignIn: React.FC = () => {
                     type="submit"
                     value="Sign In"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                    onClick={handleSubmit}
+                 />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
                       width="20"
@@ -282,7 +353,7 @@ const SignIn: React.FC = () => {
                     </svg>
                   </span>
                   Sign in with Google
-                </button>
+                </button> */}
 
                 <div className="mt-6 text-center">
                   <p>

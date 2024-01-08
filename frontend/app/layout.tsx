@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation';
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import Home1 from "@/components/Home1/home1";
 
 export default function RootLayout({
   children,
@@ -23,19 +24,19 @@ export default function RootLayout({
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-  useEffect(() => {
+  // useEffect(() => {
 
-    const checkAuth = () => {
+  //   const checkAuth = () => {
 
-      const { authToken } = parseCookies();
-      if (!authToken) {
-        // router.push('/auth/signin')
-        console.log(pathname)
-      }
-    };
-    checkAuth()
+  //     const { authToken } = parseCookies();
+  //     if (!authToken) {
+  //       // router.push('/auth/signin')
+  //       console.log(pathname)
+  //     }
+  //   };
+  //   checkAuth()
 
-  }, []);
+  // }, []);
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
@@ -43,33 +44,34 @@ export default function RootLayout({
           {loading ? (
             <Loader />
           ) : (
-            <div className="flex h-screen overflow-hidden">
-              {/* <!-- ===== Sidebar Start ===== --> */}
-              <Sidebar
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-              {/* <!-- ===== Sidebar End ===== --> */}
+            // <div className="flex h-screen overflow-hidden">
+            //   {/* <!-- ===== Sidebar Start ===== --> */}
+            //   <Sidebar
+            //     sidebarOpen={sidebarOpen}
+            //     setSidebarOpen={setSidebarOpen}
+            //   />
+            //   {/* <!-- ===== Sidebar End ===== --> */}
 
-              {/* <!-- ===== Content Area Start ===== --> */}
-              <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-                {/* <!-- ===== Header Start ===== --> */}
-                <Header
-                  sidebarOpen={sidebarOpen}
-                  setSidebarOpen={setSidebarOpen}
-                />
-                {/* <!-- ===== Header End ===== --> */}
+            //   {/* <!-- ===== Content Area Start ===== --> */}
+            //   <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+            //     {/* <!-- ===== Header Start ===== --> */}
+            //     <Header
+            //       sidebarOpen={sidebarOpen}
+            //       setSidebarOpen={setSidebarOpen}
+            //     />
+            //     {/* <!-- ===== Header End ===== --> */}
 
-                {/* <!-- ===== Main Content Start ===== --> */}
-                <main>
-                  <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-                    {children}
-                  </div>
-                </main>
-                {/* <!-- ===== Main Content End ===== --> */}
-              </div>
-              {/* <!-- ===== Content Area End ===== --> */}
-            </div>
+            //     {/* <!-- ===== Main Content Start ===== --> */}
+            //     <main>
+            //       <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+            //         {children}
+            //       </div>
+            //     </main>
+            //     {/* <!-- ===== Main Content End ===== --> */}
+            //   </div>
+            //   {/* <!-- ===== Content Area End ===== --> */}
+            // </div>
+            <Home1 children={children} />
           )}
         </div>
       </body>

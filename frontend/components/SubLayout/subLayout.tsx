@@ -4,33 +4,31 @@ import Header from "@/components/Header";
 import { useState, useEffect } from "react";
 import { parseCookies ,setCookie } from 'nookies';
 import { useRouter } from 'next/navigation'
-export default function Home1({
+export default function SubLayout({
     children,
   }: {
     children: React.ReactNode;
   }){
   const router = useRouter()
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [childonly, setChildonly] = useState(false);
-
-
+    const [childonly, setChildonly] = useState(false)
   useEffect(() => {
     const checkAuth = () => {
 
       const { authToken } = parseCookies();
       if (!authToken) {
         router.push('/auth/signin')
-        setChildonly(true)
       }
-      
     };
     checkAuth()
 
   }, []);
 
-    return(
-      <>{childonly? (children) :(
-        <div className="flex h-screen overflow-hidden">
+    return(<>
+        {
+          childonly?(<></>)
+          :
+          (<div className="flex h-screen overflow-hidden">
               {/* <!-- ===== Sidebar Start ===== --> */}
               <Sidebar
                 sidebarOpen={sidebarOpen}
@@ -56,7 +54,6 @@ export default function Home1({
                 {/* <!-- ===== Main Content End ===== --> */}
               </div>
               {/* <!-- ===== Content Area End ===== --> */}
-            </div>)}
-            </>
+            </div>)}</>
     )
 }
