@@ -2,11 +2,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Image from "next/image";
-
+import KalpanicApi from '@/kalpanic/kalpanic';
 import Link from 'next/link';
 import Danger from '../Alert/Danger';
 
 export default function AllVideo() {
+
+  const kalapi = new KalpanicApi()
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const [showmessage, setShowmessage] = useState(false)
@@ -19,15 +22,19 @@ export default function AllVideo() {
 
 
   const [videos, setVideos] = useState([{
-    id: 1,
-    title: "तेरी मुरली की धुन सुनने मैं बरसाने से आई हूं। कृष्ण भजन। जया किशोरी।",
-    url: "https://www.youtube.com/shorts/A4Uvao5e8pI",
-    duration: "67",
-    created_at: "2024-01-02T19:32:08.334417Z",
-    updated_at: "2024-01-02T19:32:08.334506Z",
-    image: "https://images.newindianexpress.com/uploads/user/imagelibrary/2022/1/8/w900X450/Narendra_Modi_PTI.jpg?w=400&dpr=2.6",
-    status: "pending",
-    search_term: 1
+    "id": 2,
+    "title": "How girls don’t care how much money you got only the followers 😂 #shorts",
+    "description": null,
+    "video_id": null,
+    "url": "https://www.youtube.com/shorts/OzczqdGgA3c",
+    "duration": "25",
+    "created_at": "2024-01-07T20:18:11.060521Z",
+    "updated_at": "2024-01-07T20:18:11.060586Z",
+    "status": "pending",
+    "image": "https://i.ytimg.com/vi/OzczqdGgA3c/default.jpg",
+    "error": "",
+    "search_term": 3,
+    "user": 1
   }])
 
   const on_change_searchterm = (event: any) => {
@@ -49,16 +56,13 @@ export default function AllVideo() {
       setAlert('Invalid index to remove')
     }
 
-    // TODO: simple post api update the status of video
-    // try {
-    //   const response = await axios.post(`${apiUrl}/searchterms/`,);
-    //   console.log('Response:', response.data);
-    // video_to_update['id']
-    // } catch (error) {
-    //   console.error('Error:', error);
-    // setShowmessage(true)
-    // setAlert(`${error}`)
-    // }
+    try{
+        const data = await kalapi.update_a_video( video_to_update.id, "CanUse")
+    }
+    catch(error){
+      console.log(error)
+    }
+    // TODO: SHOW  Alert
 
   }
 
@@ -67,16 +71,14 @@ export default function AllVideo() {
 
   useEffect(() => {
 
-    const checkAuth = () => {
-      axios.get(`${apiUrl}/videos/`)
-        .then(response => {
-          console.log(response.data)
-          setVideos(response.data)
-        })
-        .catch(error => {
-
+    const checkAuth = async() => {
+      try{
+        const data:any = await kalapi.get_all_videos("pending");
+        setVideos(data);
+      }
+        catch(error) {
           console.error('Error:', error);
-        });
+        };
 
     }
     checkAuth();

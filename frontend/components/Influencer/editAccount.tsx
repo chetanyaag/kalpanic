@@ -1,9 +1,11 @@
 'use client'
 import { useEffect, useState } from "react"
-
+import KalpanicApi from "@/kalpanic/kalpanic"
 
 const EditAccount = ({submitRefresh, accounts_data}) => {
 
+    const kalpanic = new KalpanicApi()
+    const [accountId, setAccountId] = useState(0)
     const [name, setName] = useState('')
     const [token, setToken] = useState('')
     const [image, setImage] = useState('')
@@ -12,6 +14,7 @@ const EditAccount = ({submitRefresh, accounts_data}) => {
 
     useEffect(() => {
         // Update local state when the parent's data changes
+        setAccountId(accounts_data.id)
         setName(accounts_data.name)
         setImage(accounts_data.image)
         setPlatform(accounts_data.image)
@@ -35,10 +38,25 @@ const EditAccount = ({submitRefresh, accounts_data}) => {
     }
 
 
-    const handleOnClick = (event:any) =>{
+    const handleOnClick = async (event:any) =>{
         event.preventDefault();
         // api call so save the data
-        submitRefresh(true)
+
+
+        const payload = {
+          "name": name,
+          "image": image,
+          "token": token
+        }
+
+        try{
+          const data = await kalpanic.update_a_account(accountId, payload)
+          console.log(data)
+        }catch(error){
+          console.log(error)
+        }
+
+        submitRefresh(true);
 
     }
     return(<>

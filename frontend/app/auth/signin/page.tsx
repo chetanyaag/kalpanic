@@ -5,7 +5,7 @@ import Image from "next/image";
 import axios from 'axios';
 import { parseCookies ,setCookie } from 'nookies';
 import { useRouter } from 'next/navigation'
-
+import KalpanicApi from "@/kalpanic/kalpanic";
 
 
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
@@ -21,14 +21,14 @@ const SignIn: React.FC = () => {
 
 
   const router = useRouter()
-
+  const kalapi = new KalpanicApi();
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showmessage, setShowmessage] = useState(false)
   const [alert, setAlert] = useState('')
   const apiUrl = process.env.API_URL || 'http://localhost:8000';
 
-
+  
 
 
   const handleOnChangeName = (event:any) =>{
@@ -42,27 +42,14 @@ const SignIn: React.FC = () => {
 
         event.preventDefault();
 
-
-        const formData = {
-          "username": username,
-          "password": password
-        }
+          
         try {
-          const response = await axios.post(`${apiUrl}/api/token/`, formData);
-          console.log('Response:', response.data);
-
-          setCookie(null, 'accessToken', response.data['access'], {
-            maxAge: 30 * 24 * 60 * 60, // 30 days
-            path: '/',
-          });
-          setCookie(null, 'authToken', response.data['refresh'], {
-            maxAge: 30 * 24 * 60 * 60, // 30 days
-            path: '/',
-          });
-
+          const formData = {
+            "username": username,
+            "password": password
+          }
+          const data = await kalapi.get_login(formData)
           window.location.href = "/allvideo"
-
-
 
         } catch (error) {
           console.error('Error:', error);

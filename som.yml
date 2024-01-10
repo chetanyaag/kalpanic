@@ -1,0 +1,41 @@
+[?1049h[>4;2m[?1h=[?2004h[?1004h[1;60r[?12h[?12l[22;2t[22;1t[27m[23m[29m[m[H[2J[?25l[60;1H"/var/folders/xz/4l0lvr9s1178zdsw2xh9xqd80000gn/T/kubectl-edit-820643495.yaml" 358L, 12921B[1;1H# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:[11;7Hautopilot.gke.io/resource-adjustment: '{"input":{"containers":[{"name":"celery"}]},"output":{"containers":[{"limits":{"cpu":"500m","ephemeral-storage":"1Gi","mee[12;1Hmory":"2Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"name":"celery"}]},"modified":true}'[13;7Hautopilot.gke.io/warden-version: 2.7.49[14;7Hdeployment.kubernetes.io/revision: "1"[15;7Hkubectl.kubernetes.io/last-applied-configuration: |[16;9H{"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"celery","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels""[17;1H:{"app":"celery"}},"template":{"metadata":{"labels":{"app":"celery"}},"spec":{"containers":[{"command":["celery","--app=tutorial","worker","-l","INFO"],"image":"chetaa[18;1Hnyaag/restapi:031fa0a7b6ff1a49939a808c0cedbac060a8cdd8","name":"celery"}]}}}}
+    creationTimestamp: "2024-01-06T18:52:29Z"
+    generation: 1
+    name: celery
+    namespace: default
+    resourceVersion: "3766734"
+    uid: cd9e2b39-c043-4a41-96b8-9105310879b5
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:[30;7HmatchLabels:[31;9Happ: celery
+    strategy:[33;7HrollingUpdate:[34;9HmaxSurge: 25%[35;9HmaxUnavailable: 25%[36;7Htype: RollingUpdate
+    template:[38;7Hmetadata:[39;9HcreationTimestamp: null[40;9Hlabels:[41;11Happ: celery[42;7Hspec:[43;9Hcontainers:[44;9H- command:[45;11H- celery[46;11H- --app=tutorial[47;11H- worker[48;11H- -l[49;11H- INFO[50;11Himage: chetanyaag/restapi:031fa0a7b6ff1a49939a808c0cedbac060a8cdd8[51;11HimagePullPolicy: IfNotPresent[52;11Hname: celery[53;11Hresources:[54;13Hlimits:[55;15Hcpu: 500m[56;15Hephemeral-storage: 1Gi[57;15Hmemory: 2Gi[58;13Hrequests:[59;15Hcpu: 500m[1;1H[?25h[?4m[27m[23m[29m[m[H[2J[?25l[1;1H# Please edit the object below. Lines beginning with a '#' will be ignored,[?25h[27m[23m[29m[m[H[2J[?25l[1;1H# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:[11;7Hautopilot.gke.io/resource-adjustment: '{"input":{"containers":[{"name":"celery"}]},"output":{"containers":[{"limits":{"cpu":"500m","ephemeral-storage":"1Gi","mee[12;1Hmory":"2Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"name":"celery"}]},"modified":true}'[13;7Hautopilot.gke.io/warden-version: 2.7.49[14;7Hdeployment.kubernetes.io/revision: "1"[15;7Hkubectl.kubernetes.io/last-applied-configuration: |[16;9H{"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"celery","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels""[17;1H:{"app":"celery"}},"template":{"metadata":{"labels":{"app":"celery"}},"spec":{"containers":[{"command":["celery","--app=tutorial","worker","-l","INFO"],"image":"chetaa[18;1Hnyaag/restapi:031fa0a7b6ff1a49939a808c0cedbac060a8cdd8","name":"celery"}]}}}}
+    creationTimestamp: "2024-01-06T18:52:29Z"
+    generation: 1
+    name: celery
+    namespace: default
+    resourceVersion: "3766734"
+    uid: cd9e2b39-c043-4a41-96b8-9105310879b5
+  spec:[1;1H[?25h[26;1H[?1004l[?2004l[?1l>[?1049l[>4;mVim: Caught deadly signal HUP
+Vim: Finished.
+[26;1H[23;2t[23;1t

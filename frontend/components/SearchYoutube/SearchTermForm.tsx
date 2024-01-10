@@ -2,11 +2,15 @@
 import axios from 'axios';
 import { useState } from 'react';
 import Image from "next/image";
-
+import KalpanicApi from '@/kalpanic/kalpanic';
 import Link from 'next/link';
 import Danger from '../Alert/Danger';
 
 export default function SearchTermForm() {
+
+  const kalpanicApi = new KalpanicApi()
+
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const [showmessage, setShowmessage] = useState(false)
@@ -40,14 +44,14 @@ export default function SearchTermForm() {
     status: "pending",
     search_term: 1
   }])
-  
+
   const on_change_searchterm = (event: any) => {
     setSearchTerm(event.target.value)
   }
 
 
 
-  const handleOnClickAdd = async(event: any, index: number) => {
+  const handleOnClickAdd = async (event: any, index: number) => {
     event.preventDefault();
     console.log(index)
     const updatedVideos = [...videos]
@@ -61,16 +65,17 @@ export default function SearchTermForm() {
       setAlert('Invalid index to remove')
     }
 
-    // TODO: simple post api update the status of video
-    // try {
-    //   const response = await axios.post(`${apiUrl}/searchterms/`,);
-    //   console.log('Response:', response.data);
-        // video_to_update['id']
-    // } catch (error) {
-    //   console.error('Error:', error);
-    // setShowmessage(true)
-    // setAlert(`${error}`)
-    // }
+    try{
+      const data = await kalpanicApi.update_a_video( video_to_update.id, "CanUse")
+
+      // todo: add suceess alert
+  }
+  catch(error){
+    console.log(error)
+    setShowmessage(true)
+    setAlert(`${error}`)
+  }
+
 
   }
 
@@ -80,14 +85,12 @@ export default function SearchTermForm() {
     event.preventDefault();
     if (searchTerm !== "") {
       setLoading(true)
-      const formData = {
-        "term": searchTerm,
-        "status": "pending"
+      const payload = {
+        "term": searchTerm
       }
       try {
-        const response = await axios.post(`${apiUrl}/searchterms/`, formData);
-        console.log('Response:', response.data);
-        setVideos(response.data["videos"])
+        const data = await kalpanicApi.create_a_seacrhterm(payload);
+        setVideos(data["videos"])
         setLoading(false)
       } catch (error) {
         console.error('Error:', error);
@@ -98,7 +101,7 @@ export default function SearchTermForm() {
 
   return (<>
 
-    {showmessage? (<Danger message={alert} />) :(<></>)}
+    {showmessage ? (<Danger message={alert} />) : (<></>)}
 
     <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
 
@@ -211,8 +214,8 @@ export default function SearchTermForm() {
             <Link
               href="#"
               className="inline-flex items-center justify-center rounded-md border border-meta-3 py-3 px-8 text-center font-medium text-meta-3 hover:bg-opacity-90 lg:px-8 xl:px-10"
-            
-              onClick={(e)=>handleOnClickAdd(e, key)}
+
+              onClick={(e) => handleOnClickAdd(e, key)}
             >
               ADD
             </Link>

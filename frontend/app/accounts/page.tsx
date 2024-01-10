@@ -6,10 +6,10 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import TableI from "@/components/Influencer/tableI";
 import EditAccount from "@/components/Influencer/editAccount";
 import CreateAccount from "@/components/Influencer/createAccount";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAmp } from "next/amp";
 
-
+import KalpanicApi from "@/kalpanic/kalpanic";
 
 
 // export const metadata: Metadata = {
@@ -20,53 +20,84 @@ import { useAmp } from "next/amp";
 
 const Accounts: React.FC = () => {
 
+  const kalpanicApi = new KalpanicApi();
+/*
+id: 1
+​​
+image: "some url"
+​​
+name: "some name"
+​​
+platform: 1
+​​
+status: "Pending"
+​​
+token: "some token"
+​​
+updated_at: "2024-01-08T19:29:44.851361Z"
+​​
+user: 1
+
+
+
+*/
   const [refresh, setRefreh] = useState<boolean>(true);
   const [accounts, setAccounts] = useState([ {
+    id:4,
     logo: "/images/brand/brand-01.svg",
     name: "Google",
     image: "/images/brand/brand-01.svg",
     token: "5,768",
-    sales: 590,
-    conversion: 4.8,
+    status: 590,
+    platform: 4.8,
   }])
 
   const [editAccount, setEditAccount] = useState( {
+    id:4,
     logo: "/images/brand/brand-01.svg",
-    name: "",
-    image: "",
-    token: "",
-    sales: 590,
-    conversion: 4.8,
+    name: "Google",
+    image: "/images/brand/brand-01.svg",
+    token: "5,768",
+    status: 590,
+    platform: 4.8,
+  
   })
 
-  const handleRefresh = (bool:boolean)=>{
+  const handleRefresh = async(bool:boolean)=>{
 
-      const response_data =[ {
-        logo: "/images/brand/brand-01.svg",
-        name: "Google",
-        image: "/images/brand/brand-01.svg",
-        token: "5,768",
-        sales: 590,
-        conversion: 4.8,
-      },
-      {
-        logo: "/images/brand/brand-01.svg",
-        name: "facebook",
-        image: "/images/brand/brand-01.svg",
-        token: "5,768",
-        sales: 590,
-        conversion: 4.8,
-      }]    
-      setAccounts(response_data)
+    try{
+      const data:any = await kalpanicApi.get_all_accounts();
+      // console.log(data)
+      setAccounts(data)
+    }
+      catch(error) {
+        console.error('Error:', error);
+      };
 
 
   }
 
 
-  const handleEditData = (data)=>{
+  const handleEditData = (data:any)=>{
     console.log(data)
     setEditAccount(data)
   }
+
+    useEffect (() => {
+
+    const checkAuth = async() => {
+      try{
+        const data:any = await kalpanicApi.get_all_accounts();
+        // console.log(data)
+        setAccounts(data)
+      }
+        catch(error) {
+          console.error('Error:', error);
+        };
+
+    }
+    checkAuth();
+  }, []);
 
   return (
     <>

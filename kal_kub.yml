@@ -30,6 +30,26 @@ spec:
           image: redis:7.0.11-alpine
 
 ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: frontend-deployment
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: frontend
+#   template:
+#     metadata:
+#       labels:
+#         app: frontend
+#     spec:
+#       containers:
+#       - name: frontend
+#         image: chetanyaag/ui:031fa0a7b6ff1a49939a808c0cedbac060a8cdd8
+#         ports:
+#         - containerPort: 3000
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,6 +69,14 @@ spec:
         image: chetanyaag/ui:031fa0a7b6ff1a49939a808c0cedbac060a8cdd8
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "1000m"
+          limits:
+            memory: "2048Mi"
+            cpu: "2000m"
+
 ---
 apiVersion: v1
 kind: Service
@@ -73,14 +101,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: restapi
+      app: restapi-app
   template:
     metadata:
       labels:
-        app: restapi
+        app: restapi-app
     spec:
       containers:
-      - name: restapi
+      - name: restapi-app
         image: chetanyaag/restapi:031fa0a7b6ff1a49939a808c0cedbac060a8cdd8 
         command: ["gunicorn", "--bind", "0.0.0.0:8000", "tutorial.wsgi"]
         ports:
@@ -90,10 +118,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: restapi-service
+  name: restapi
 spec:
   selector:
-    app: restapi
+    app: restapi-app
   ports:
     - protocol: TCP
       port: 8000

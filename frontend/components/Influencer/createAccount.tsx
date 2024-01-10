@@ -1,7 +1,9 @@
 'use client'
 import { useState } from "react"
-
+import KalpanicApi from "@/kalpanic/kalpanic"
 const CreateAccount = ({submitRefresh}) => {
+
+  const kalpanic  = new KalpanicApi()
 
     const [name, setName] = useState('')
     const [token, setToken] = useState('')
@@ -25,8 +27,27 @@ const CreateAccount = ({submitRefresh}) => {
     }
 
 
-    const handleOnClick = (event:any) =>{
+    const handleOnClick = async(event:any) =>{
         event.preventDefault();
+
+
+        const payload = {
+          "platform":1,
+          "name": name,
+          "image": image,
+          "token": token
+        }
+
+        try{
+          const data = await kalpanic.create_a_account( payload)
+          console.log(data)
+        }catch(error){
+          console.log(error)
+        }
+
+
+
+
         submitRefresh(true)
 
     }

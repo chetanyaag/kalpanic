@@ -53,23 +53,23 @@ const brandData: BRAND[] = [
 
 
 
-const TableI = ({accounts_data, sendData}) => {
+const TableI = ({ accounts_data, sendData }) => {
 
-    const [accounts, setAccounts] = useState(accounts_data)
+  const [accounts, setAccounts] = useState(accounts_data)
+
+  const externaImageLoader = ({ src }: { src: string }) => src;
+  useEffect(() => {
+    // Update local state when the parent's data changes
+    setAccounts(accounts_data);
+  }, [accounts_data]);
 
 
-    useEffect(() => {
-        // Update local state when the parent's data changes
-        setAccounts(accounts_data);
-      }, [accounts_data]);
+  const handleOnClick = (event: any, index: number) => {
 
+    const temp_account = [...accounts]
+    sendData(temp_account[index])
 
-      const handleOnClick =(event:any, index:number)=>{
-        
-        const temp_account = [...accounts]
-        sendData(temp_account[index])
-
-      }
+  }
 
 
 
@@ -111,17 +111,16 @@ const TableI = ({accounts_data, sendData}) => {
 
         {accounts.map((brand, key) => (
           <div
-            className={`grid grid-cols-3 sm:grid-cols-5 ${
-              key === brandData.length - 1
+            className={`grid grid-cols-3 sm:grid-cols-5 ${key === brandData.length - 1
                 ? ""
                 : "border-b border-stroke dark:border-strokedark"
-            }`}
+              }`}
             key={key}
-            onClick={(event)=> handleOnClick(event, key) }
+            onClick={(event) => handleOnClick(event, key)}
           >
             <div className="flex items-center gap-3 p-2.5 xl:p-5">
               <div className="flex-shrink-0">
-                <Image src={brand.logo} alt="Brand" width={48} height={48} />
+                <Image loader={externaImageLoader} src={brand.image} alt="Brand" width={48} height={48} />
               </div>
               <p className="hidden text-black dark:text-white sm:block">
                 {brand.name}
@@ -129,8 +128,8 @@ const TableI = ({accounts_data, sendData}) => {
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-            <div className="flex-shrink-0">
-                <Image src={brand.logo} alt="Brand" width={48} height={48} />
+              <div className="flex-shrink-0">
+                <Image loader={externaImageLoader} src={brand.image} alt="Brand" width={48} height={48} />
               </div>
             </div>
 
