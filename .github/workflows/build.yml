@@ -1,56 +1,56 @@
-name: Build and Deploy  Kalpanic
+# name: Build and Deploy  Kalpanic
 
-on:
-  push:
-    branches:
-    - 'main'
+# on:
+#   push:
+#     branches:
+#     - 'main'
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    # Setup gcloud CLI
-    - uses: google-github-actions/setup-gcloud@1bee7de035d65ec5da40a31f8589e240eba8fde5
-      with:
-        service_account_key: ${{ secrets.GKE_SA_KEY }}
-        project_id: ${{ secrets.GKE_PROJECT }}
-        install_components: 'gke-gcloud-auth-plugin'
-        export_default_credentials: true
+#     # Setup gcloud CLI
+#     - uses: google-github-actions/setup-gcloud@1bee7de035d65ec5da40a31f8589e240eba8fde5
+#       with:
+#         service_account_key: ${{ secrets.GKE_SA_KEY }}
+#         project_id: ${{ secrets.GKE_PROJECT }}
+#         install_components: 'gke-gcloud-auth-plugin'
+#         export_default_credentials: true
+# # 
+#     # Configure Docker to use the gcloud command-line tool as a credential
+#     # helper for authentication
+#     # - run: |-
+#     #     gcloud --quiet auth configure-docker
 
-    # Configure Docker to use the gcloud command-line tool as a credential
-    # helper for authentication
-    # - run: |-
-    #     gcloud --quiet auth configure-docker
+#     # Get the GKE credentials so we can deploy to the cluster
+#     # - uses: google-github-actions/get-gke-credentials@db150f2cc60d1716e61922b832eae71d2a45938f
+#     #   with:
+#     #     cluster_name: ${{ secrets.GKE_CLUSTER }}
+#     #     location: ${{ secrets.GKE_ZONE }}
+#     #     credentials: ${{ secrets.GKE_SA_KEY }}
+#     #     project_id: ${{ secrets.GKE_PROJECT }} 
+# # 
 
-    # Get the GKE credentials so we can deploy to the cluster
-    # - uses: google-github-actions/get-gke-credentials@db150f2cc60d1716e61922b832eae71d2a45938f
-    #   with:
-    #     cluster_name: ${{ secrets.GKE_CLUSTER }}
-    #     location: ${{ secrets.GKE_ZONE }}
-    #     credentials: ${{ secrets.GKE_SA_KEY }}
-    #     project_id: ${{ secrets.GKE_PROJECT }} 
+#     - name: build and push the docker image
+#       env:
+#         image_name_frontend: ${{ secrets.IMAGE_NAME_FRONTEND }}
+#         image_name_backend: ${{ secrets.IMAGE_NAME_REST }}
+#         docker_pass: ${{ secrets.DOCKER_PASS }}
 
+#       run: |
+#         docker image build -t $image_name_frontend:$GITHUB_SHA frontend/.
+#         docker image build -t $image_name_backend:$GITHUB_SHA restapi/.
 
-    - name: build and push the docker image
-      env:
-        image_name_frontend: ${{ secrets.IMAGE_NAME_FRONTEND }}
-        image_name_backend: ${{ secrets.IMAGE_NAME_REST }}
-        docker_pass: ${{ secrets.DOCKER_PASS }}
+#         docker login -u chetanyaag -p $docker_pass
+#         docker push $image_name_frontend:$GITHUB_SHA 
+#         docker push $image_name_backend:$GITHUB_SHA 
 
-      run: |
-        docker image build -t $image_name_frontend:$GITHUB_SHA frontend/.
-        docker image build -t $image_name_backend:$GITHUB_SHA restapi/.
-
-        docker login -u chetanyaag -p $docker_pass
-        docker push $image_name_frontend:$GITHUB_SHA 
-        docker push $image_name_backend:$GITHUB_SHA 
-
-    - name: Create kubernatefile and deoploy
-      run: |
-        python3 build.py $GITHUB_SHA
-        gcloud container clusters get-credentials autopilot-cluster-1 --region asia-east2 --project famous-elevator-405017
-        kubectl apply -f kal_kub.yml
+#     - name: Create kubernatefile and deoploy
+#       run: |
+#         python3 build.py $GITHUB_SHA
+#         gcloud container clusters get-credentials autopilot-cluster-1 --region asia-east2 --project famous-elevator-405017
+#         kubectl apply -f kal_kub.yml

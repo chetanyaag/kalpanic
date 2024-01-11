@@ -7,6 +7,8 @@ from snippets.views import *
 router = DefaultRouter()
 router.register(r"searchterms", SearchTermViewSet)
 router.register(r"videos", VideoViewSet)
+router.register(r"platform", PlatformViewSet)
+router.register(r"accounts", AccountsViewSet)
 router.register(r"genartevideo", GenrateVideoViewSet)
 urlpatterns = [
     # url('', my_view),

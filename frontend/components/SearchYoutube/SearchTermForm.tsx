@@ -2,14 +2,19 @@
 import axios from 'axios';
 import { useState } from 'react';
 import Image from "next/image";
-import { Product } from "@/types/product";
-import { SearchTerm } from '@/types/searchTerm';
-import { Video } from '@/types/video';
-// import Loader from "@/components/common/Loader";
+import KalpanicApi from '@/kalpanic/kalpanic';
 import Link from 'next/link';
+import Danger from '../Alert/Danger';
 
 export default function SearchTermForm() {
+
+  const kalpanicApi = new KalpanicApi()
+
+
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [showmessage, setShowmessage] = useState(false)
+  const [alert, setAlert] = useState('')
 
   const apiUrl = process.env.API_URL || 'http://localhost:8000';
 
@@ -27,23 +32,65 @@ export default function SearchTermForm() {
     image: "https://images.newindianexpress.com/uploads/user/imagelibrary/2022/1/8/w900X450/Narendra_Modi_PTI.jpg?w=400&dpr=2.6",
     status: "pending",
     search_term: 1
+  },
+  {
+    id: 1,
+    title: "तेरी मुरली की धुन सुनने मैं बरसाने से आई हूं। कृष्ण भजन। जया किशोरी।",
+    url: "https://www.youtube.com/shorts/A4Uvao5e8pI",
+    duration: "67",
+    created_at: "2024-01-02T19:32:08.334417Z",
+    updated_at: "2024-01-02T19:32:08.334506Z",
+    image: "https://images.newindianexpress.com/uploads/user/imagelibrary/2022/1/8/w900X450/Narendra_Modi_PTI.jpg?w=400&dpr=2.6",
+    status: "pending",
+    search_term: 1
   }])
+
   const on_change_searchterm = (event: any) => {
     setSearchTerm(event.target.value)
   }
+
+
+
+  const handleOnClickAdd = async (event: any, index: number) => {
+    event.preventDefault();
+    console.log(index)
+    const updatedVideos = [...videos]
+    const video_to_update = updatedVideos[index];
+    if (index >= 0 && index < videos.length) {
+      updatedVideos.splice(index, 1)
+      setVideos(updatedVideos);
+    } else {
+      console.error('Invalid index to remove');
+      setShowmessage(true)
+      setAlert('Invalid index to remove')
+    }
+
+    try{
+      const data = await kalpanicApi.update_a_video( video_to_update.id, "CanUse")
+
+      // todo: add suceess alert
+  }
+  catch(error){
+    console.log(error)
+    setShowmessage(true)
+    setAlert(`${error}`)
+  }
+
+
+  }
+
+
 
   const handle_on_click = async (event: any) => {
     event.preventDefault();
     if (searchTerm !== "") {
       setLoading(true)
-      const formData = {
-        "term": searchTerm,
-        "status": "pending"
+      const payload = {
+        "term": searchTerm
       }
       try {
-        const response = await axios.post(`${apiUrl}/searchterms/`, formData);
-        console.log('Response:', response.data);
-        setVideos(response.data["videos"])
+        const data = await kalpanicApi.create_a_seacrhterm(payload);
+        setVideos(data["videos"])
         setLoading(false)
       } catch (error) {
         console.error('Error:', error);
@@ -53,6 +100,8 @@ export default function SearchTermForm() {
   }
 
   return (<>
+
+    {showmessage ? (<Danger message={alert} />) : (<></>)}
 
     <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
 
@@ -117,7 +166,7 @@ export default function SearchTermForm() {
           <p className="font-medium">Views</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="font-medium">SearchTerm</p>
+          <p className="font-medium">Action</p>
         </div>
       </div>
 
@@ -161,7 +210,16 @@ export default function SearchTermForm() {
             <p className="text-sm text-black dark:text-white">{product.duration} </p>
           </div>
           <div className="col-span-1 flex items-center">
-            <p className="text-sm text-meta-3">{searchTerm}</p>
+
+            <Link
+              href="#"
+              className="inline-flex items-center justify-center rounded-md border border-meta-3 py-3 px-8 text-center font-medium text-meta-3 hover:bg-opacity-90 lg:px-8 xl:px-10"
+
+              onClick={(e) => handleOnClickAdd(e, key)}
+            >
+              ADD
+            </Link>
+
           </div>
         </div>
       ))}

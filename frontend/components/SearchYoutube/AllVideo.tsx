@@ -2,11 +2,18 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Image from "next/image";
-
+import KalpanicApi from '@/kalpanic/kalpanic';
 import Link from 'next/link';
+import Danger from '../Alert/Danger';
 
 export default function AllVideo() {
+
+  const kalapi = new KalpanicApi()
+
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [showmessage, setShowmessage] = useState(false)
+  const [alert, setAlert] = useState('')
 
   const apiUrl = process.env.API_URL || 'http://localhost:8000';
 
@@ -15,41 +22,73 @@ export default function AllVideo() {
 
 
   const [videos, setVideos] = useState([{
-    id: 1,
-    title: "तेरी मुरली की धुन सुनने मैं बरसाने से आई हूं। कृष्ण भजन। जया किशोरी।",
-    url: "https://www.youtube.com/shorts/A4Uvao5e8pI",
-    duration: "67",
-    created_at: "2024-01-02T19:32:08.334417Z",
-    updated_at: "2024-01-02T19:32:08.334506Z",
-    image: "https://images.newindianexpress.com/uploads/user/imagelibrary/2022/1/8/w900X450/Narendra_Modi_PTI.jpg?w=400&dpr=2.6",
-    status: "pending",
-    search_term: 1
+    "id": 2,
+    "title": "How girls don’t care how much money you got only the followers 😂 #shorts",
+    "description": null,
+    "video_id": null,
+    "url": "https://www.youtube.com/shorts/OzczqdGgA3c",
+    "duration": "25",
+    "created_at": "2024-01-07T20:18:11.060521Z",
+    "updated_at": "2024-01-07T20:18:11.060586Z",
+    "status": "pending",
+    "image": "https://i.ytimg.com/vi/OzczqdGgA3c/default.jpg",
+    "error": "",
+    "search_term": 3,
+    "user": 1
   }])
+
+  const on_change_searchterm = (event: any) => {
+    setSearchTerm(event.target.value)
+  }
+
+
+  const handleOnClickAdd = async (event: any, index: number) => {
+    event.preventDefault();
+    console.log(index)
+    const updatedVideos = [...videos]
+    const video_to_update = updatedVideos[index];
+    if (index >= 0 && index < videos.length) {
+      updatedVideos.splice(index, 1)
+      setVideos(updatedVideos);
+    } else {
+      console.error('Invalid index to remove');
+      setShowmessage(true)
+      setAlert('Invalid index to remove')
+    }
+
+    try{
+        const data = await kalapi.update_a_video( video_to_update.id, "CanUse")
+    }
+    catch(error){
+      console.log(error)
+    }
+    // TODO: SHOW  Alert
+
+  }
+
 
 
 
   useEffect(() => {
 
-    const checkAuth = () => {
-    axios.get(`${apiUrl}/videos/`)
-    .then(response => {
-      console.log(response.data)
-      setVideos(response.data)
-    })
-    .catch(error => {
-
-      console.error('Error:', error);
-    });
+    const checkAuth = async() => {
+      try{
+        const data:any = await kalapi.get_all_videos("pending");
+        setVideos(data);
+      }
+        catch(error) {
+          console.error('Error:', error);
+        };
 
     }
     checkAuth();
-}, []);
- 
+  }, []);
+
 
   return (<>
 
 
-
+    {showmessage ? (<Danger message={alert} />) : (<></>)}
 
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
@@ -72,7 +111,7 @@ export default function AllVideo() {
           <p className="font-medium">Views</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="font-medium">SearchTerm</p>
+          <p className="font-medium">Action</p>
         </div>
       </div>
 
@@ -116,7 +155,14 @@ export default function AllVideo() {
             <p className="text-sm text-black dark:text-white">{product.duration} </p>
           </div>
           <div className="col-span-1 flex items-center">
-            <p className="text-sm text-meta-3">{searchTerm}</p>
+          <Link
+              href="#"
+              className="inline-flex items-center justify-center rounded-md border border-meta-3 py-3 px-8 text-center font-medium text-meta-3 hover:bg-opacity-90 lg:px-8 xl:px-10"
+            
+              onClick={(e)=>handleOnClickAdd(e, key)}
+            >
+              ADD
+            </Link>
           </div>
         </div>
       ))}
