@@ -5,6 +5,7 @@ import Image from "next/image";
 import KalpanicApi from '@/kalpanic/kalpanic';
 import Link from 'next/link';
 import Danger from '../Alert/Danger';
+import Success from '../Alert/Success';
 
 export default function AllVideo() {
 
@@ -12,8 +13,11 @@ export default function AllVideo() {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [showmessage, setShowmessage] = useState(false)
+  const [showerror, setShowerror] = useState(false)
   const [alert, setAlert] = useState('')
+
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('A video is added in scheduled')
 
   const apiUrl = process.env.API_URL || 'http://localhost:8000';
 
@@ -50,9 +54,10 @@ export default function AllVideo() {
     if (index >= 0 && index < videos.length) {
       updatedVideos.splice(index, 1)
       setVideos(updatedVideos);
+      setShowSuccess(true)
     } else {
       console.error('Invalid index to remove');
-      setShowmessage(true)
+      setShowerror(true)
       setAlert('Invalid index to remove')
     }
 
@@ -67,7 +72,12 @@ export default function AllVideo() {
   }
 
 
-
+  const handleError = async(bool:boolean)=>{
+    setShowerror(false)
+  }
+  const handleSuccess = async(bool:boolean)=>{
+    setShowSuccess(false)
+  }
 
   useEffect(() => {
 
@@ -88,7 +98,8 @@ export default function AllVideo() {
   return (<>
 
 
-    {showmessage ? (<Danger message={alert} />) : (<></>)}
+    {showerror ? (<Danger message={alert} submit_error={handleError} />) : (<></>)}
+    {showSuccess? (<Success message={successMessage} submit_error={handleSuccess}  />):(<></>)}
 
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">

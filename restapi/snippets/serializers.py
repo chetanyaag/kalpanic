@@ -6,11 +6,10 @@ from snippets.models import GenrateVideo, SearchTerm, Video, Platform, Accounts,
 from snippets.script.youtube import YoutubeClass
 
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id'] 
+        fields = ["id"]
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -21,6 +20,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
 class SearchTermSerializer(serializers.ModelSerializer):
     videos = VideoSerializer(many=True, read_only=True)
+
     class Meta:
         model = SearchTerm
         fields = "__all__"
@@ -28,7 +28,7 @@ class SearchTermSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         term = validated_data["term"]
         status = validated_data.get("status", "pending")
-        user = validated_data['user']
+        user = validated_data["user"]
         existing_search_term = SearchTerm.objects.filter(term=term).first()
 
         if existing_search_term:
@@ -36,8 +36,8 @@ class SearchTermSerializer(serializers.ModelSerializer):
             existing_search_term.save()
             return existing_search_term
         else:
-            search_term = SearchTerm(term=term, status=status, user_id=user_data['id'])
-            
+            search_term = SearchTerm(term=term, status=status, user_id=user.id)
+
             search_term.save()
             youtube_instance = YoutubeClass()
             video_list = youtube_instance.get_video_items(search_term.term)
@@ -50,7 +50,7 @@ class SearchTermSerializer(serializers.ModelSerializer):
                 if yt_video.length > 90:
                     continue
                 image_link = video_instance["snippet"]["thumbnails"]["default"]["url"]
-                
+
                 video = Video(
                     search_term_id=search_term.id,
                     title=video_instance["snippet"]["title"],
@@ -58,13 +58,12 @@ class SearchTermSerializer(serializers.ModelSerializer):
                     status="pending",
                     duration=str(yt_video.length),
                     image=image_link,
-                    user_id=user_data['id'],
-                    error=""
+                    user_id=user.id,
+                    error="",
                 )
                 video.save()
 
             return search_term
-
 
 
 class PlatformSerializer(serializers.ModelSerializer):
@@ -72,49 +71,59 @@ class PlatformSerializer(serializers.ModelSerializer):
         model = Platform
         fields = "__all__"
 
-class AccountsSerializer(serializers.ModelSerializer):
 
+class AccountsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Accounts
         fields = "__all__"
 
     def create(self, validated_data):
-
         name = validated_data["name"]
         image = validated_data["image"]
         token = validated_data["token"]
-        platform = validated_data['platform']
-        user = validated_data['user']
-        account = Accounts(name=name, image=image, user_id=user.id, token=token, platform_id=platform.id)
+        platform = validated_data["platform"]
+        user = validated_data["user"]
+        meta_account_id = validated_data["meta_account_id"]
+        account = Accounts(
+            name=name,
+            image=image,
+            user_id=user.id,
+            token=token,
+            platform_id=platform.id,
+            meta_account_id=meta_account_id
+        )
         account.save()
-        
+
         return account
 
+
 class PublishSerializer(serializers.ModelSerializer):
-    video = VideoSerializer(write_only=True)
-    user = UserSerializer(write_only=True)
     class Meta:
         model = Publish
         fields = "__all__"
 
     def create(self, validated_data):
+        video = validated_data["video"]
+        user = validated_data["user"]
+        account = validated_data["account"]
         title = validated_data["title"]
         description = validated_data["description"]
         shedule_date = validated_data["shedule_date"]
-        platform_id = validated_data['platform']['id']
 
-        user_data = self.context.get('request').data.get('user', {})
-        publish = Publish(name=name, image=image, user_id=user_data['id'], token=token, platform_id=platform_id)
+        publish = Publish(
+            video_id=video.id,
+            user_id=user.id,
+            account_id=account.id,
+            title=title,
+            description=description,
+            shedule_date=shedule_date,
+        )
         publish.save()
-        
-        return search_term
 
+        return publish
 
 
 class GenrateVideoSearializer(serializers.ModelSerializer):
     class Meta:
         model = GenrateVideo
         fields = "__all__"
-
-
-

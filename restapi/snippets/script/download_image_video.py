@@ -4,11 +4,11 @@ import requests
 from pytube import YouTube as YT
 
 
-def youtube_video_download(video_url: str):
+def youtube_video_download(video_url: str, file_name="file_name.mp4"):
     yt_video = YT(video_url)
     file_path = r"download_temp/videos"
     strm = yt_video.streams.get_by_resolution("720p")
-    strm.download(file_path, "file_name.mp4")
+    strm.download(file_path, file_name)
 
 
 def download_image(url: str):

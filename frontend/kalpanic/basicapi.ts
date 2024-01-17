@@ -16,7 +16,10 @@ class BasicApi {
 
   private handleError(error: AxiosError): never {
     if (axios.isAxiosError(error)) {
-      console.error('API request failed:', error.message);
+      // console.error('API request failed:', error.response.status);
+      // if (error.response.status== 401){
+      //   throw "401 error"
+      // }
       throw error;
     } else {
       console.error('Non-Axios error occurred:', error);

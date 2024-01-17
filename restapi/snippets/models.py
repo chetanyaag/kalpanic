@@ -12,7 +12,6 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
 class SearchTerm(models.Model):
     STATUS_CHOICES = (
-
         ("Pending", "Pending"),
         ("CanUse", "CanShare"),
         ("CanNotUse", "CanNotUse"),
@@ -26,7 +25,9 @@ class SearchTerm(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Pending")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="search_terms", null=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="search_terms", null=True
+    )
 
     def __str__(self):
         return self.term
@@ -36,7 +37,7 @@ class Video(models.Model):
     search_term = models.ForeignKey(
         SearchTerm, on_delete=models.CASCADE, related_name="videos"
     )
-    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name="videos")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="videos")
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=2044, null=True)
     video_id = models.CharField(max_length=255, null=True)
@@ -44,7 +45,9 @@ class Video(models.Model):
     duration = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=20, choices=SearchTerm.STATUS_CHOICES, default="Pending")
+    status = models.CharField(
+        max_length=20, choices=SearchTerm.STATUS_CHOICES, default="Pending"
+    )
     image = models.CharField(
         max_length=2048,
         null=True,
@@ -52,42 +55,62 @@ class Video(models.Model):
     )
     error = models.CharField(max_length=2044)
 
+
 class Platform(models.Model):
     name = models.CharField(max_length=255)
     logo = models.CharField(max_length=2044)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class Accounts(models.Model):
-    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name="accounts")
-    platform =  models.ForeignKey(Platform, on_delete=models.CASCADE, related_name="accounts")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="accounts")
+    platform = models.ForeignKey(
+        Platform, on_delete=models.CASCADE, related_name="accounts"
+    )
+    meta_account_id = models.CharField(max_length=2044, null=True)
     name = models.CharField(max_length=255)
     image = models.CharField(max_length=2044)
     token = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=20, choices=SearchTerm.STATUS_CHOICES, default="Pending")
+    status = models.CharField(
+        max_length=20, choices=SearchTerm.STATUS_CHOICES, default="Pending"
+    )
 
 
 class Publish(models.Model):
-    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="publish_videos")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="publish_videos")
+    video = models.ForeignKey(
+        Video, on_delete=models.CASCADE, related_name="publish_videos"
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="publish_videos"
+    )
+    account = models.ForeignKey(
+        Accounts, null=True, on_delete=models.CASCADE, related_name="publish_videos"
+    )
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=2044)
     shedule_date = models.DateTimeField()
-    status = models.CharField(max_length=20, choices=SearchTerm.STATUS_CHOICES, default="Pending")
+    status = models.CharField(
+        max_length=20, choices=SearchTerm.STATUS_CHOICES, default="Pending"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-
 
 
 class GenrateVideo(models.Model):
     genrated_video_url = models.URLField(null=True, default="")
     image_link = models.CharField(max_length=2088)
     source_video_link = models.URLField()
-    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name="genrated_videos")
-    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="genrated_videos")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="genrated_videos"
+    )
+    video = models.ForeignKey(
+        Video, on_delete=models.CASCADE, related_name="genrated_videos"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=20, choices=SearchTerm.STATUS_CHOICES, default="Pending")
+    status = models.CharField(
+        max_length=20, choices=SearchTerm.STATUS_CHOICES, default="Pending"
+    )

@@ -1,15 +1,21 @@
 'use client';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from "next/image";
 
 import Link from 'next/link';
 import Danger from '../Alert/Danger';
+import KalpanicApi from '@/kalpanic/kalpanic';
+import Success from '../Alert/Success';
 
 export default function Publish() {
 
+
+  const kalapi  = new KalpanicApi()
+
+
   //states
-  const [videos, setVdieos] = useState([{
+  const [videos, setVideos] = useState([{
     id: 1,
     title: "तेरी मुरली की धुन सुनने मैं बरसाने से आई हूं। कृष्ण भजन। जया किशोरी।",
     url: "https://www.youtube.com/shorts/A4Uvao5e8pI",
@@ -33,15 +39,32 @@ export default function Publish() {
   }])
 
   const [accounts, setAccounts] = useState([
-    "CHINTU ", "YOUTUBE", "FACEBOOK"
+    {
+      "id": 1,
+      "meta_account_id": "",
+      "name": "summy",
+      "image": "",
+      "token": "",
+      "created_at": "2024-01-11T21:15:00.466032Z",
+      "updated_at": "2024-01-14T10:23:05.086526Z",
+      "status": "Pending",
+      "user": 1,
+      "platform": 1
+    },
   ])
   const [loading, serLoading] = useState(false)
 
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [date, setDate] = useState("")
-  const [account, setAccount] = useState("")
+  const [account, setAccount] = useState(1)
 
+
+  const [showerror, setShowerror] = useState(false)
+  const [alert, setAlert] = useState('')
+
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('A video is posted to published')
 //load values
 
 // load allvideo to publish
@@ -55,7 +78,7 @@ export default function Publish() {
 
     const temp_videos= [...videos]
     temp_videos[key]['title'] = event.target.value;
-    setVdieos(temp_videos)
+    setVideos(temp_videos)
     setTitle(event.target.value)
 
 
@@ -64,7 +87,7 @@ export default function Publish() {
 
     const temp_videos= [...videos]
     temp_videos[key]['url'] = event.target.value;
-    setVdieos(temp_videos)
+    setVideos(temp_videos)
     setDescription(event.target.value)
 
 
@@ -77,24 +100,109 @@ export default function Publish() {
   }
 
 
-  const handlePublish = (event:any, key:number) => {
+
+  const handlePublish = async (event:any, key:number) => {
     event.preventDefault();
-    alert(` title :${title}    description:${description}     date :${date}    account :${account}    ${key}`)
+    let title_temp=""
+    if (!title){
+      title_temp = videos.filter(vide => vide.id===key)[0].title
+    }
+    else{
+      title_temp = title
+    }
+    const dateInput = new Date(date);
+    const isoDateString = dateInput.toISOString();
 
+      try{
 
-    // call the api
-    
-    //  change publish button
+        const payload= {
+          "video":key,
+          "user":1,
+          "account":account,
+          "title":title_temp,
+          "description":"description",
+          "shedule_date":isoDateString
+        }
 
+        const data:any = await kalapi.create_a_publish(payload);
+        setShowSuccess(true)
+
+      }
+        catch(error) {
+          console.error('Error:', error);
+          setShowerror(true)
+          setAlert(`${error}`)
+          return
+        };
+
+        try{
+          const data = await kalapi.update_a_video( key, "complete")
+          window.location.reload()
+      }
+      catch(error){
+        console.log(error)
+      }
 
   }
+
+  const handleError = async(bool:boolean)=>{
+    setShowerror(false)
+  }
+  const handleSuccess = async(bool:boolean)=>{
+    setShowSuccess(false)
+  }
+
+
+
 
 
   //extra function
   const externaImageLoader = ({ src }: { src: string }) => src;
 
 
+
+
+
+  useEffect(() => {
+
+    const checkAuth = async() => {
+      try{
+        const data:any = await kalapi.get_all_videos("CanUse");
+        setVideos(data);
+      }
+        catch(error) {
+          console.error('Error:', error);
+        };
+
+    }
+
+    checkAuth();
+  }, []);
+
+
+  useEffect(() => {
+
+    const checkAuth = async() => {
+      try{
+        const data:any = await kalapi.get_all_accounts();
+        setAccounts(data)
+      }
+        catch(error) {
+          console.error('Error:', error);
+        };
+
+    }
+
+    checkAuth();
+  }, []);
+
+
+
+
+
   return (<>
+            {showerror ? (<Danger message={alert} submit_error={handleError} />) : (<></>)}
+              {showSuccess? (<Success message={successMessage} submit_error={handleSuccess}  />):(<></>)}
 {videos.map((video, key)=>(
 
 <div className="flex flex-col gap-9 mb-3" key={key}>
@@ -169,10 +277,10 @@ export default function Publish() {
                   </g>
                 </svg>
               </span>
-              <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input" onChange={handleAccount}>
-              {accounts.map((account: string, key: number) => (
-              <option key={key} value={key}>
-                {account}
+              <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input" value={account.id}    onChange={handleAccount}>
+              {accounts.map((account1: any, key: number) => (
+              <option key={key} value={account1.id}>
+                {account1.name}
               </option>
             ))}
 
@@ -233,7 +341,7 @@ export default function Publish() {
        ></textarea>
       </div>
 
-      <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray" onClick={(e)=>handlePublish(e, key)}>
+      <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray" onClick={(e)=>handlePublish(e, video.id)}>
         Add To Publish Queue
       </button>
     </div>

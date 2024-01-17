@@ -47,9 +47,10 @@ user: 1
     logo: "/images/brand/brand-01.svg",
     name: "Google",
     image: "/images/brand/brand-01.svg",
+    meta_account_id:23321,
     token: "5,768",
     status: 590,
-    platform: 4.8,
+    platform: 1,
   }])
 
   const [editAccount, setEditAccount] = useState( {
@@ -62,6 +63,14 @@ user: 1
     platform: 4.8,
   
   })
+
+  // const [ platforms, setPlatform] = useState([  {
+  //   "id": 1,
+  //   "name": "instagram",
+  //   "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-FnhsPPZWsAM1P7a1NgGX0yRRJjBoxuEpDQ&usqp=CAU",
+  //   "created_at": "2024-01-11T21:14:44.351739Z",
+  //   "updated_at": "2024-01-11T21:14:44.351846Z"
+  // }])
 
   const handleRefresh = async(bool:boolean)=>{
 
@@ -88,7 +97,6 @@ user: 1
     const checkAuth = async() => {
       try{
         const data:any = await kalpanicApi.get_all_accounts();
-        // console.log(data)
         setAccounts(data)
       }
         catch(error) {
@@ -96,7 +104,22 @@ user: 1
         };
 
     }
+
+    // const get_platforms = async() =>{
+    //   try{
+    //     const data:any = await kalpanicApi.get_all_platfroms();
+    //     setPlatform(data)
+    //   }
+    //     catch(error) {
+    //       console.error('Error:', error);
+    //     };
+    // }
+
+
+
+
     checkAuth();
+    // get_platforms();
   }, []);
 
   return (

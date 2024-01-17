@@ -7,8 +7,6 @@ class KalpanicApi{
     private basicapi = new BasicApi()
 
 
-
-
     //auth apis
     async get_login(payload:any):Promise<any>{
         const endpoint = "/api/token/"
@@ -89,6 +87,15 @@ class KalpanicApi{
         const data:any = await this.basicapi.fetchData(endpoint);
         return data
     }
+
+
+    // publish 
+    async create_a_publish(payload:any):Promise<any>{
+        const endpoint = "/publish/"
+        const data:any = await this.basicapi.postData(payload,endpoint);
+        return data;
+    }
+
 
 
 }

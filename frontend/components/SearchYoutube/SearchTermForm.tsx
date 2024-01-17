@@ -5,6 +5,7 @@ import Image from "next/image";
 import KalpanicApi from '@/kalpanic/kalpanic';
 import Link from 'next/link';
 import Danger from '../Alert/Danger';
+import Success from '../Alert/Success';
 
 export default function SearchTermForm() {
 
@@ -15,6 +16,9 @@ export default function SearchTermForm() {
 
   const [showmessage, setShowmessage] = useState(false)
   const [alert, setAlert] = useState('')
+
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('A video is added in scheduled')
 
   const apiUrl = process.env.API_URL || 'http://localhost:8000';
 
@@ -59,6 +63,7 @@ export default function SearchTermForm() {
     if (index >= 0 && index < videos.length) {
       updatedVideos.splice(index, 1)
       setVideos(updatedVideos);
+
     } else {
       console.error('Invalid index to remove');
       setShowmessage(true)
@@ -68,7 +73,8 @@ export default function SearchTermForm() {
     try{
       const data = await kalpanicApi.update_a_video( video_to_update.id, "CanUse")
 
-      // todo: add suceess alert
+      // todo: add suceess alert      
+      setShowSuccess(true)
   }
   catch(error){
     console.log(error)
@@ -79,6 +85,12 @@ export default function SearchTermForm() {
 
   }
 
+  const handleError = async(bool:boolean)=>{
+    setShowmessage(false)
+  }
+  const handleSuccess = async(bool:boolean)=>{
+    setShowSuccess(false)
+  }
 
 
   const handle_on_click = async (event: any) => {
@@ -101,7 +113,8 @@ export default function SearchTermForm() {
 
   return (<>
 
-    {showmessage ? (<Danger message={alert} />) : (<></>)}
+    {showmessage ? (<Danger message={alert} submit_error={handleError}/>) : (<></>)}
+    {showSuccess ? (<Success message={successMessage} submit_error={handleSuccess}/>) : (<></>)}
 
     <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
 

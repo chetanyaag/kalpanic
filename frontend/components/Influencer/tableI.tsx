@@ -57,6 +57,22 @@ const TableI = ({ accounts_data, sendData }) => {
 
   const [accounts, setAccounts] = useState(accounts_data)
 
+  const [ platforms, setPlatforms] = useState([  {
+    "id": 2,
+    "name": "Instagram",
+    "logo": "images/brand/brand-06.svg",
+    "created_at": "2024-01-11T21:14:44.351739Z",
+    "updated_at": "2024-01-11T21:14:44.351846Z"
+  },
+  {
+    "id": 1,
+    "name": "Facebook",
+    "logo": "images/brand/brand-05.svg",
+    "created_at": "2024-01-11T21:14:44.351739Z",
+    "updated_at": "2024-01-11T21:14:44.351846Z"
+  }])
+
+
   const externaImageLoader = ({ src }: { src: string }) => src;
   useEffect(() => {
     // Update local state when the parent's data changes
@@ -99,7 +115,7 @@ const TableI = ({ accounts_data, sendData }) => {
           </div>
           <div className="hidden p-2.5 text-center sm:block xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Sales
+              Account_ID
             </h5>
           </div>
           <div className="hidden p-2.5 text-center sm:block xl:p-5">
@@ -120,7 +136,7 @@ const TableI = ({ accounts_data, sendData }) => {
           >
             <div className="flex items-center gap-3 p-2.5 xl:p-5">
               <div className="flex-shrink-0">
-                <Image loader={externaImageLoader} src={brand.image} alt="Brand" width={48} height={48} />
+                <Image loader={externaImageLoader} src={(platforms.filter(item => item.id === brand.platform))[0].logo} alt="Brand" width={48} height={48} />
               </div>
               <p className="hidden text-black dark:text-white sm:block">
                 {brand.name}
@@ -134,11 +150,11 @@ const TableI = ({ accounts_data, sendData }) => {
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-meta-3">${brand.token}</p>
+              <p  className="text-meta-3">********</p>
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-              <p className="text-black dark:text-white">{brand.sales}</p>
+              <p className="text-black dark:text-white">{brand.meta_account_id}</p>
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">

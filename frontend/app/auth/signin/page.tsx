@@ -57,15 +57,15 @@ const SignIn: React.FC = () => {
           setAlert(`${error}`)
         }
   } 
-
-
+  const handleError = async(bool:boolean)=>{
+    setShowmessage(false)
+  }
 
 
   return (
     <>
-      {/* <Breadcrumb pageName="Sign In" /> */}
-      {showmessage? (<Danger message={alert} />) :(<></>)}
-      
+
+
 
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
@@ -89,8 +89,7 @@ const SignIn: React.FC = () => {
               </Link>
 
               <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
+                Research, Generate, Post
               </p>
 
               <span className="mt-15 inline-block">
@@ -219,6 +218,8 @@ const SignIn: React.FC = () => {
           </div>
 
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
+
+          
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Start for free</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
@@ -304,6 +305,7 @@ const SignIn: React.FC = () => {
                     onClick={handleSubmit}
                  />
                 </div>
+                {showmessage? (<Danger message={alert} submit_error={handleError} />) :(<></>)}
 
                 {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
