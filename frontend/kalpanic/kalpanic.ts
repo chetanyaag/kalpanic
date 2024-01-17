@@ -1,6 +1,6 @@
 import BasicApi from "./basicapi";
 import { parseCookies, setCookie } from 'nookies';
-
+import axios, { AxiosError, AxiosResponse } from 'axios';
 class KalpanicApi{
 
 
@@ -23,8 +23,12 @@ class KalpanicApi{
     }
 
 
-    async get_token(payload:any):Promise<any>{
+    async get_token():Promise<any>{
         const endpoint = "/api/token/refresh/"
+        const { authToken } = parseCookies();
+        const payload = {
+            "refresh": authToken
+        }
         const data:any = await this.basicapi.postData(payload,endpoint, false);
       setCookie(null, 'accessToken', data.access, {
         maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -38,25 +42,61 @@ class KalpanicApi{
 
     async create_a_seacrhterm(payload:any):Promise<any>{
         const endpoint = "/searchterms/"
-        const data:any = await this.basicapi.postData(payload,endpoint);
-        return data;
+        try{
+            const data:any = await this.basicapi.postData(payload,endpoint);
+            return data;
+        }
+        catch(error:any){
+
+        if (error.response.status== 401){
+            this.get_token()
+            window.location.reload()
+        }
+
+        }
+
     }
 
     //videos
 
     async get_all_videos(status: string):Promise<any>{
         const endpoint = `/videos/?status=${status}`
-        const data:any = await this.basicapi.fetchData(endpoint);
-        return data
+
+
+        try{
+            const data:any = await this.basicapi.fetchData(endpoint);
+            return data
+        }
+        catch(error:any){
+
+        if (error.response.status== 401){
+            this.get_token()
+            window.location.reload()
+        }
+
+        }
+
+
     }
 
     async update_a_video(video_id: number, status: string): Promise<any>{
         const endpoint = `/videos/${video_id}/`
-        const payload = {
-            "status": `${status}`
+        try{
+            const payload = {
+                "status": `${status}`
+            }
+            const data:any = await  this.basicapi.patchData(payload, endpoint);
+            return data
         }
-        const data:any = await  this.basicapi.patchData(payload, endpoint);
-        return data
+        catch(error:any){
+
+        if (error.response.status== 401){
+            this.get_token()
+            window.location.reload()
+        }
+
+        }
+  
     }
 
 
@@ -64,36 +104,91 @@ class KalpanicApi{
 
     async get_all_platfroms():Promise<any>{
         const endpoint = `/platform/`
-        const data:any = await this.basicapi.fetchData(endpoint);
-        return data
+        try{
+            const data:any = await this.basicapi.fetchData(endpoint);
+            return data
+        }
+        catch(error:any){
+
+        if (error.response.status== 401){
+            this.get_token()
+            window.location.reload()
+        }
+
+        }
+
     }
 
 
     // accounts
     async create_a_account(payload:any):Promise<any>{
         const endpoint = "/accounts/"
-        const data:any = await this.basicapi.postData(payload,endpoint);
-        return data;
+        try{
+            const data:any = await this.basicapi.postData(payload,endpoint);
+            return data;
+        }
+        catch(error:any){
+
+        if (error.response.status== 401){
+            this.get_token()
+            window.location.reload()
+        }
+
+        }
+
     }
 
     async update_a_account(account_id:number, payload:any):Promise<any>{
         const endpoint = `/accounts/${account_id}/`
-        const data:any = await this.basicapi.patchData(payload,endpoint);
-        return data;
+        try{
+            const data:any = await this.basicapi.patchData(payload,endpoint);
+            return data;
+        }
+        catch(error:any){
+
+        if (error.response.status== 401){
+            this.get_token()
+            window.location.reload()
+        }
+
+        }
+
     }
 
     async get_all_accounts():Promise<any>{
         const endpoint = `/accounts/`
-        const data:any = await this.basicapi.fetchData(endpoint);
-        return data
+        try{
+            const data:any = await this.basicapi.fetchData(endpoint);
+            return data
+        }
+        catch(error:any){
+
+        if (error.response.status== 401){
+            this.get_token()
+            window.location.reload()
+        }
+
+        }
+
     }
 
 
     // publish 
     async create_a_publish(payload:any):Promise<any>{
         const endpoint = "/publish/"
-        const data:any = await this.basicapi.postData(payload,endpoint);
-        return data;
+        try{
+            const data:any = await this.basicapi.postData(payload,endpoint);
+            return data;
+        }
+        catch(error:any){
+
+        if (error.response.status== 401){
+            this.get_token()
+            window.location.reload()
+        }
+
+        }
+
     }
 
 

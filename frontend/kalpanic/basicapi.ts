@@ -18,6 +18,8 @@ class BasicApi {
     if (axios.isAxiosError(error)) {
       // console.error('API request failed:', error.response.status);
       // if (error.response.status== 401){
+
+
       //   throw "401 error"
       // }
       throw error;
