@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
             "password": password
           }
           const data = await kalapi.get_login(formData)
-          window.location.href = "/allvideo"
+          window.location.href = "/all-video"
 
         } catch (error) {
           console.error('Error:', error);

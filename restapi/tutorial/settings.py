@@ -84,11 +84,23 @@ WSGI_APPLICATION = "tutorial.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default="sqlite:///{}".format(os.path.join(BASE_DIR, "db.sqlite3"))
+#     )
+# }
+
 DATABASES = {
-    "default": dj_database_url.config(
-        default="sqlite:///{}".format(os.path.join(BASE_DIR, "db.sqlite3"))
-    )
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'u778072769_kalpanic',
+		'USER': 'u778072769_kalpanic',
+		'PASSWORD': 'D0;shwjcY?~',
+		'HOST':'62.72.28.204',
+		'PORT':'3306',
+	}
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

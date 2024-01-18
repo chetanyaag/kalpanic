@@ -25,3 +25,4 @@ after_success:
 - docker login -u chetanyaag -p dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
 - docker push "${IMGNAME_FRONTEND}:${TRAVIS_COMMIT}"
 - docker push "${IMGNAME_BACKEND}:${TRAVIS_COMMIT}" 
+# D0;shwjcY?~

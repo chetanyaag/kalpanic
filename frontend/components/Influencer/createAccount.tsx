@@ -108,7 +108,7 @@ return(<>
               {showSuccess? (<Success message={successMessage} submit_error={handleSuccess}  />):(<></>)}
             <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
               <h3 className="font-medium text-black dark:text-white">
-                Edit In Account
+                Create Account
               </h3>
             </div>
             <form action="#">

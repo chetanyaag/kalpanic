@@ -71,7 +71,6 @@ class KalpanicApi{
 
         if (error.response.status== 401){
             this.get_token()
-            window.location.reload()
         }
 
         }
@@ -112,7 +111,7 @@ class KalpanicApi{
 
         if (error.response.status== 401){
             this.get_token()
-            window.location.reload()
+
         }
 
         }
@@ -165,7 +164,7 @@ class KalpanicApi{
 
         if (error.response.status== 401){
             this.get_token()
-            window.location.reload()
+
         }
 
         }

@@ -36,3 +36,4 @@ black
 isort
 mypy
 boto3
+mysqlclient
