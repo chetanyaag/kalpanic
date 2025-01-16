@@ -6,7 +6,7 @@ env:
   - IMGNAME_FRONTEND=chetanyaag/ui
   - IMGNAME_BACKEND=chetanyaag/rest-api
   - USERNAME=chetanyaag
-  - DHUB_PASS=dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
+  - DHUB_PASS=Password
 
 services:
   - docker
@@ -22,7 +22,7 @@ script:
  - echo "here i am here"
 
 after_success:
-- docker login -u chetanyaag -p dckr_pat_DtBgxqDxJG2XGK5KhffuiU8XWvo
+- docker login -u chetanyaag -p password
 - docker push "${IMGNAME_FRONTEND}:${TRAVIS_COMMIT}"
 - docker push "${IMGNAME_BACKEND}:${TRAVIS_COMMIT}" 
 # D0;shwjcY?~
